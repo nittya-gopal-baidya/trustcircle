@@ -14,7 +14,19 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 
-const WS_BASE = 'ws://localhost:8000';
+// Automatically use VITE_WS_BASE if deployed, or derive from VITE_API_BASE, or fallback to local
+const getWsBase = () => {
+  if (import.meta.env.VITE_WS_BASE) {
+    return import.meta.env.VITE_WS_BASE;
+  }
+  if (import.meta.env.VITE_API_BASE) {
+    return import.meta.env.VITE_API_BASE.replace(/^http/, 'ws');
+  }
+  return 'ws://localhost:8000';
+};
+
+const WS_BASE = getWsBase();
+
 
 export function useTrustSocket(vendorId = 'sharma_chai_001') {
   const [isConnected, setIsConnected] = useState(false);

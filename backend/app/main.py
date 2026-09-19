@@ -131,20 +131,32 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# ── CORS — allow React frontend on localhost ──────────────────────────────────
+# ── CORS — allow React frontend on localhost & production domains ──────────────
+from app.config import settings
+
+configured_origins = [
+    "http://localhost:5173",   # Vite default
+    "http://localhost:3000",   # fallback
+    "http://127.0.0.1:5173",
+    "http://127.0.0.1:3000",
+]
+if settings.allowed_origins:
+    for o in settings.allowed_origins.split(","):
+        clean_origin = o.strip()
+        if clean_origin and clean_origin not in configured_origins:
+            configured_origins.append(clean_origin)
+
+is_wildcard = "*" in configured_origins
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",   # Vite default
-        "http://localhost:3000",   # fallback
-        "http://127.0.0.1:5173",
-        "http://127.0.0.1:3000",
-    ],
-    allow_credentials=True,
+    allow_origins=["*"] if is_wildcard else configured_origins,
+    allow_origin_regex=None if is_wildcard else r"https://.*\.vercel\.app",
+    allow_credentials=False if is_wildcard else True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 # ── Register routers ──────────────────────────────────────────────────────────
 

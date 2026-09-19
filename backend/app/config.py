@@ -18,5 +18,9 @@ class Settings(BaseSettings):
     # A customer must scan >= this many times to count as "repeat"
     REPEAT_SCAN_THRESHOLD: int = 3
 
+    # CORS Allowed Origins (comma-separated or * for public cloud deployment)
+    allowed_origins: str = "*"
+
 
 settings = Settings()
+

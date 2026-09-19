@@ -4,7 +4,9 @@
  * API service for communicating with the TrustCircle FastAPI backend.
  */
 
-const API_BASE = 'http://localhost:8000';
+// Automatically use VITE_API_BASE if deployed, otherwise fallback to local backend
+const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000';
+
 
 export async function fetchVendors() {
   const res = await fetch(`${API_BASE}/api/vendors`);
