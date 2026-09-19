@@ -1,0 +1,14 @@
+# Backend Secrets & Config
+.env
+*.env
+*.env.*
+
+# Python virtualenv & cache
+venv/
+env/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Local Mock Database files
+data/*.json
